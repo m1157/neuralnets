@@ -240,7 +240,7 @@ def train_():
     reg = 2
     learning_rate = 3e-2
     num_iters = 5_000
-    batch_size = 128
+    batch_size = 256
 
     neural_net = NeuralNetwork([DenseLayer(n_input, hidden_layer_size),
                                 DropoutLayer(0.25),
