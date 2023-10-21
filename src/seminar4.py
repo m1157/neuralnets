@@ -276,6 +276,7 @@ def train_():
         f.write(report)
     visualize_loss(loss_history, 'seminar4')
 
+
 if __name__ == '__main__':
     """1 point"""
     # Train your neural net!
