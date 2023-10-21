@@ -8,7 +8,6 @@ from test_utils import get_preprocessed_data
 
 epsilon = 1e-3
 
-
 class Layer(ABC):
 
     @abstractmethod
