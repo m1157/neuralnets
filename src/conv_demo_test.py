@@ -18,9 +18,9 @@ class ConvolutionDemo(unittest.TestCase):
         self.assertEqual(z.shape, (1, 32, 23, 7))
 
     def test_conv_2d_1(self):
-        conv_1d_layer = tf.keras.layers.Conv2D(filters=5, kernel_size=(3, 3))
+        conv_1d_layer = tf.keras.layers.Conv2D(filters=3, kernel_size=(3, 3), strides=1)
         z = conv_1d_layer(self.x)
-        self.assertEqual(z.shape, (1, 30, 30, 5))
+        self.assertEqual(z.shape, (1, 10, 10, 3))
 
     def test_conv_2d_2(self):
         conv_1d_layer = tf.keras.layers.Conv2D(filters=7, kernel_size=(10, 10))

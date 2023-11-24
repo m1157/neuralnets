@@ -2,3 +2,6 @@ numpy
 scipy
 tensorflow
 matplotlib
+tqdm
+boto3
+python-dotenv
