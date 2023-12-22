@@ -13,8 +13,8 @@ import dotenv
 import pandas as pd
 import tensorflow as tf
 
-MAX_WORDS = 1000
-MAX_SEQ_LEN = 150
+MAX_WORDS = 3800
+MAX_SEQ_LEN = 120
 DATA_URL_TRAIN = 'https://storage.yandexcloud.net/fa-bucket/spam.csv'
 DATA_URL_TEST = 'https://storage.yandexcloud.net/fa-bucket/spam_test.csv'
 PATH_TO_TRAIN_DATA = 'data/raw/spam.csv'
@@ -22,7 +22,7 @@ PATH_TO_TEST_DATA = 'data/raw/spam_test.csv'
 PATH_TO_MODEL = 'models/model_7'
 BUCKET_NAME = 'neuralnets2023'
 # todo fix your git user name
-YOUR_GIT_USER = 'labintsev'
+YOUR_GIT_USER = 'm1157'
 
 
 def download_data():
@@ -43,9 +43,13 @@ def make_model():
     """
     inputs = tf.keras.layers.Input(name='inputs', shape=[MAX_SEQ_LEN])
     x = tf.keras.layers.Embedding(MAX_WORDS, output_dim=4, input_length=MAX_SEQ_LEN)(inputs)
-    x = tf.keras.layers.SimpleRNN(units=4)(x)
+    x = tf.keras.layers.LSTM(units=16, return_sequences=True)(x)
+    x = tf.keras.layers.Dropout(0.2)(x)
+    x = tf.keras.layers.LSTM(units=8)(x)
+    x = tf.keras.layers.Dropout(0.2)(x)
     x = tf.keras.layers.Dense(1, name='out_layer')(x)
-    x = tf.keras.layers.Activation('sigmoid')(x)
+    x = tf.keras.layers.Activation('tanh')(x)
+
     recurrent_model = tf.keras.Model(inputs=inputs, outputs=x)
     return recurrent_model
 
@@ -66,8 +70,12 @@ def train():
 
     model = make_model()
     model.summary()
-    model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy', tf.keras.metrics.Precision()])
-    model.fit(sequences_matrix, Y_train, batch_size=128, epochs=10, validation_split=0.2)
+    class_weight = {0: 0.5, 1: 3}
+    model.compile(loss='binary_crossentropy',
+                  optimizer=tf.keras.optimizers.AdamW(3e-4),
+                  metrics=['accuracy', tf.keras.metrics.Precision()])
+    model.fit(sequences_matrix, Y_train,
+              batch_size=128, epochs=20, validation_split=0.2, class_weight=class_weight)
     model.save('models/model_7')
 
 
